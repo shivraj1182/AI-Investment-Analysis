@@ -1,0 +1,209 @@
+# AI-Investment-Analysis Configuration
+# This file contains all configurable parameters for the system
+
+# Data Sources & APIs
+data:
+  source: 'yahoo'  # yahoo, alpha_vantage, broker_api
+  cache_dir: './data/cache'
+  cache_duration_hours: 24
+  benchmark: 'NIFTY50.NS'  # For comparison
+
+# News & Sentiment Configuration
+news:
+  enabled: true
+  api_key: '${NEWS_API_KEY}'  # Set via environment variable
+  sources:
+    - 'bloomberg'
+    - 'reuters'
+    - 'cnbc'
+  sentiment_model: 'finbert'  # finbert or distilbert-financial
+  lookback_days: 30
+  min_sentiment_confidence: 0.6
+
+# Machine Learning Models
+models:
+  price_forecasting:
+    type: 'lstm'  # lstm, gru, transformer
+    hidden_size: 128
+    num_layers: 2
+    dropout: 0.2
+    lookback_window: 60  # days
+    forecast_horizon: 5  # days
+  
+  ensemble:
+    weights:
+      price_signal: 0.4
+      sentiment_signal: 0.3
+      technical_signal: 0.3
+    confidence_threshold: 0.65
+
+# Backtesting Configuration
+backtester:
+  initial_capital: 100000  # INR
+  slippage_basis_points: 5  # 0.05%
+  transaction_fee_basis_points: 5  # 0.05%
+  max_leverage: 1.0  # Retail constraint
+  commission_per_trade: 0  # If fixed commission
+  rebalance_frequency: 'monthly'  # daily, weekly, monthly
+
+# Risk Management
+risk_management:
+  position_size_method: 'volatility'  # kelly, fixed_percent, volatility
+  
+  # Kelly Criterion settings
+  kelly_fraction: 0.25  # Fractional Kelly for safety
+  
+  # Fixed percentage method
+  fixed_percent_per_trade: 0.02  # 2% of capital per trade
+  
+  # Volatility-based sizing
+  target_volatility: 0.15  # Annual volatility target
+  atr_multiple_for_stop: 2.0
+  
+  # Portfolio-level controls
+  max_position_size: 0.1  # 10% of capital per asset
+  max_sector_exposure: 0.25  # 25% per sector
+  max_correlation_pairs: 0.7  # Max correlation between holdings
+  
+  # Drawdown management
+  max_portfolio_drawdown: 0.20  # Stop trading at -20%
+  max_daily_loss: 0.03  # -3% daily loss limit
+  max_monthly_loss: 0.10  # -10% monthly loss limit
+  
+  # Risk per trade
+  risk_per_trade: 0.02  # 2% risk per trade
+  max_stop_loss_pct: 0.05  # Max 5% stop loss
+
+# Technical Analysis Settings
+technical_indicators:
+  # Trend
+  sma_periods: [20, 50, 200]
+  ema_periods: [12, 26]
+  
+  # Momentum
+  rsi_period: 14
+  rsi_overbought: 70
+  rsi_oversold: 30
+  
+  macd:
+    fast: 12
+    slow: 26
+    signal: 9
+  
+  # Volatility
+  bollinger_period: 20
+  bollinger_std: 2.0
+  atr_period: 14
+  
+  # Volume
+  volume_ma_period: 20
+  obv_threshold: 0.02
+
+# Strategy-Specific Settings
+
+# Long-term Investment Strategy
+long_term_strategy:
+  enabled: true
+  min_market_cap: 1000  # Million INR
+  min_volume_rank: 500  # Top 500 by volume
+  rebalance_frequency: 'quarterly'
+  holding_period_months: 12
+  quality_score_weight: 0.3
+  value_score_weight: 0.3
+  momentum_score_weight: 0.2
+  sentiment_score_weight: 0.2
+
+# Swing Trading Strategy
+swing_strategy:
+  enabled: true
+  expected_holding_days: [5, 15]
+  entry_signal_strength: 0.7
+  exit_on_reversal: true
+  use_sentiment: true
+  sentiment_filter_strength: 0.5
+  technical_lookback: 30  # days
+
+# Intraday Trading Strategy
+intraday_strategy:
+  enabled: false  # Disabled by default - research mode only
+  symbols: ['INFY', 'TCS', 'RELIANCE']
+  time_interval: '5m'  # 1m, 5m, 15m
+  market_open: '09:15'
+  market_close: '15:30'
+  max_position_hold_minutes: 120
+  intraday_stop_loss_pct: 0.02  # 2%
+  paper_trading_only: true
+
+# Broker Integration
+broker:
+  type: 'alpaca'  # alpaca, zerodha, angelone, shoonya
+  paper_trading: true
+  
+  # Alpaca settings
+  alpaca:
+    api_key: '${ALPACA_API_KEY}'
+    secret_key: '${ALPACA_SECRET_KEY}'
+    base_url: 'https://paper-api.alpaca.markets'  # paper trading
+  
+  # Zerodha settings (if enabled)
+  zerodha:
+    api_key: '${ZERODHA_API_KEY}'
+    access_token: '${ZERODHA_ACCESS_TOKEN}'
+
+# Database Configuration
+database:
+  type: 'postgresql'  # postgresql or sqlite
+  connection_string: '${DATABASE_URL}'
+  # Fallback SQLite for development
+  sqlite_path: './data/ai_investment.db'
+  pool_size: 10
+  max_overflow: 20
+
+# Logging
+logging:
+  level: 'INFO'  # DEBUG, INFO, WARNING, ERROR
+  log_file: './logs/ai_investment.log'
+  max_file_size_mb: 100
+  backup_count: 5
+  format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+
+# API Server Settings
+api_server:
+  host: '0.0.0.0'
+  port: 8000
+  debug: false
+  workers: 4
+  reload_on_change: true
+
+# Performance Monitoring
+monitoring:
+  track_metrics: true
+  save_trades: true
+  generate_reports: true
+  report_frequency: 'weekly'  # daily, weekly, monthly
+
+# Feature Flags
+features:
+  enable_price_forecasting: true
+  enable_sentiment_analysis: true
+  enable_anomaly_detection: true
+  enable_portfolio_optimization: true
+  enable_live_trading: false  # Always false for safety
+  enable_notifications: true
+  notification_channels: ['email', 'log']  # email, slack, telegram
+
+# Email Notifications
+notifications:
+  email:
+    enabled: false  # Set to true to enable
+    smtp_server: '${SMTP_SERVER}'
+    sender_email: '${SENDER_EMAIL}'
+    sender_password: '${SENDER_PASSWORD}'
+    recipients: ['investor@example.com']
+  
+  slack:
+    enabled: false
+    webhook_url: '${SLACK_WEBHOOK_URL}'
+
+# Environment-specific overrides
+production: false
