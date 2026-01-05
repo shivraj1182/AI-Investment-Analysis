@@ -1,0 +1,57 @@
+# Core Data & ML Libraries
+pandas>=1.3.0
+numpy>=1.21.0
+scikit-learn>=0.24.0
+tensorflow>=2.8.0
+torch>=1.10.0
+transformers>=4.20.0
+
+# Technical Analysis
+ta-lib>=0.4.24
+pandas-ta>=0.3.14b0
+
+# News & Sentiment Analysis
+requests>=2.28.0
+beautifulsoup4>=4.10.0
+nlp>=0.4.0
+
+# API & Web
+fastapi>=0.95.0
+uvicorn>=0.21.0
+pydantic>=1.9.0
+
+# Data Handling & Cache
+sqlalchemy>=1.4.0
+psycopg2-binary>=2.9.0  # PostgreSQL
+redis>=4.0.0
+
+# Time Series & Stats
+scipy>=1.7.0
+statsmodels>=0.13.0
+
+# Visualization
+plotly>=5.0.0
+matplotlib>=3.5.0
+seaborn>=0.11.0
+
+# Testing & Documentation
+pytest>=7.0.0
+pytest-cov>=3.0.0
+python-dotenv>=0.19.0
+
+# Utilities
+pyyaml>=6.0
+loguru>=0.6.0
+tqdm>=4.60.0
+
+# Optional: Broker API Integrations
+alpaca-trade-api>=1.8.0  # Alpaca
+# zerodha-py>=0.2.0  # Zerodha (uncomment if needed)
+
+# Optional: Database
+alembic>=1.7.0  # Database migrations
+
+# Code Quality
+black>=22.0.0
+flake8>=4.0.0
+isort>=5.10.0
